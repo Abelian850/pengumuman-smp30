@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verifikasi Dokumen — SMP Negeri 30 Semarang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:  #003d7a;
+      --gold:     #c8a02a;
+      --green:    #065f46;
+      --green-bg: #d1fae5;
+      --red:      #7f1d1d;
+      --red-bg:   #fee2e2;
+      --grey:     #1e293b;
+      --grey-bg:  #f1f5f9;
+      --border:   #e2e8f0;
+      --text:     #0f172a;
+      --muted:    #64748b;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #f0f4ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 0 48px;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== HEADER INSTANSI ===== */
+    .kop-bar {
+      width: 100%;
+      background: var(--primary);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-content: center;
+    }
+    .kop-bar img {
+      width: 42px; height: 42px;
+      object-fit: contain;
+    }
+    .kop-bar-text { text-align: center; color: #fff; }
+    .kop-bar-text h1 { font-size: .95rem; font-weight: 800; letter-spacing: .3px; }
+    .kop-bar-text p  { font-size: .7rem; opacity: .8; letter-spacing: .5px; text-transform: uppercase; margin-top: 2px; }
+
+    /* ===== CARD VERIFIKASI ===== */
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,61,122,.13), 0 2px 8px rgba(0,61,122,.06);
+      width: 100%;
+      max-width: 440px;
+      margin: 32px 20px 0;
+      overflow: hidden;
+      animation: fadeUp .55s cubic-bezier(.34,1.4,.64,1) both;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(28px) scale(.96); }
+      to   { opacity:1; transform:translateY(0) scale(1); }
+    }
+
+    /* STATUS BANNER */
+    .status-banner {
+      padding: 28px 24px 22px;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .status-banner.valid   { background: linear-gradient(135deg, #065f46, #059669); }
+    .status-banner.invalid { background: linear-gradient(135deg, #7f1d1d, #b91c1c); }
+    .status-banner.pending { background: linear-gradient(135deg, #1e3a8a, #1d4ed8); }
+
+    .status-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .status-icon svg { width: 34px; height: 34px; }
+
+    .status-label {
+      font-size: .7rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,.8);
+    }
+    .status-title {
+      font-size: 1.25rem; font-weight: 800; color: #fff; line-height: 1.3;
+    }
+    .status-sub {
+      font-size: .82rem; color: rgba(255,255,255,.85); line-height: 1.5;
+    }
+
+    /* TTD INFO */
+    .ttd-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px; padding: 6px 14px;
+      font-size: .78rem; color: #fff; font-weight: 600;
+    }
+    .ttd-badge svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    /* DETAIL DOKUMEN */
+    .detail-section { padding: 22px 24px; }
+    .detail-title {
+      font-size: .7rem; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .detail-title::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    .detail-table { width: 100%; border-collapse: collapse; }
+    .detail-table tr { border-bottom: 1px solid var(--border); }
+    .detail-table tr:last-child { border-bottom: none; }
+    .detail-table td { padding: 10px 0; font-size: .875rem; vertical-align: top; }
+    .dt-label { color: var(--muted); width: 44%; font-weight: 500; }
+    .dt-sep   { width: 8%; color: var(--muted); }
+    .dt-val   { font-weight: 700; color: var(--text); }
+    .dt-val.lulus   { color: #065f46; }
+    .dt-val.tidak   { color: #7f1d1d; }
+
+    /* STATUS KELULUSAN BOX */
+    .kelulusan-box {
+      margin: 0 24px 20px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      display: flex; align-items: center; gap: 12px;
+      font-weight: 700;
+    }
+    .kelulusan-box.lulus { background: var(--green-bg); color: var(--green); }
+    .kelulusan-box.tidak { background: var(--red-bg);   color: var(--red);   }
+    .kelulusan-box svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .kelulusan-box .kb-text { font-size: .85rem; }
+    .kelulusan-box .kb-status { font-size: 1.05rem; letter-spacing: 1px; }
+
+    /* PENANDATANGAN */
+    .penanda-section {
+      margin: 0 24px 22px;
+      padding: 14px 18px;
+      background: var(--grey-bg);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .penanda-label {
+      font-size: .68rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+    }
+    .penanda-inner {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .penanda-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .penanda-avatar svg { width: 22px; height: 22px; }
+    .penanda-nama  { font-weight: 700; font-size: .9rem; }
+    .penanda-jabatan { font-size: .75rem; color: var(--muted); }
+    .penanda-nip   { font-size: .72rem; color: var(--muted); margin-top: 1px; }
+    .penanda-tgl {
+      margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+      font-size: .8rem; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .penanda-tgl svg { width: 14px; height: 14px; color: var(--primary); flex-shrink: 0; }
+    .penanda-tgl strong { color: var(--primary); }
+
+    /* FOOTER CARD */
+    .card-footer {
+      padding: 14px 24px 20px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .card-footer p { font-size: .72rem; color: var(--muted); line-height: 1.6; }
+    .card-footer a { color: var(--primary); font-weight: 600; text-decoration: none; }
+    .card-footer a:hover { text-decoration: underline; }
+
+    /* NOT FOUND */
+    .not-found-card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.1);
+      width: 100%; max-width: 400px;
+      margin: 40px 20px 0;
+      padding: 40px 32px;
+      text-align: center;
+      animation: fadeUp .5s ease both;
+    }
+    .not-found-card svg { width: 56px; height: 56px; color: #94a3b8; margin-bottom: 16px; }
+    .not-found-card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+    .not-found-card p  { font-size: .85rem; color: var(--muted); line-height: 1.6; }
+
+    /* WATERMARK saat print */
+    @media print {
+      body { background: #fff; }
+      .kop-bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .status-banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .kelulusan-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- KOP BAR -->
+  <div class="kop-bar">
+    <img src="https://i.ibb.co.com/JRXsJrxb/logo-semarang.png" alt="Logo Kota Semarang" />
+    <div class="kop-bar-text">
+      <h1>SMP Negeri 30 Semarang</h1>
+      <p>Portal Verifikasi Dokumen Resmi</p>
+    </div>
+    <img src="https://i.ibb.co.com/0RcVChHd/logo-30.png" alt="Logo SMP 30" />
+  </div>
+
+  <!-- KONTEN — diisi JS -->
+  <div id="konten"></div>
+
+<script>
+  // =====================================================
+  // AMBIL PARAMETER DARI URL
+  // =====================================================
+  const params  = new URLSearchParams(window.location.search);
+  const nisn    = params.get('nisn')    || '';
+  const nama    = params.get('nama')    || '';
+  const status  = (params.get('status') || '').toUpperCase().trim();
+  const kelas   = params.get('kelas')   || '';
+  const tglTTD  = params.get('tgl')     || '';
+  const sekolah = params.get('sekolah') || 'SMP Negeri 30 Semarang';
+
+  const isLulus = status.includes('LULUS') && !status.includes('TIDAK');
+  const isValid = nisn.length === 10 && nama.length > 0;
+
+  // =====================================================
+  // RENDER
+  // =====================================================
+  const el = document.getElementById('konten');
+
+  if (!isValid) {
+    // Parameter tidak lengkap / QR tidak valid
+    el.innerHTML = `
+      <div class="not-found-card">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <h2>Dokumen Tidak Valid</h2>
+        <p>QR Code ini tidak dapat diverifikasi.<br/>Pastikan Anda memindai QR Code dari surat resmi yang diterbitkan oleh ${sekolah}.</p>
+      </div>`;
+  } else {
+    // Status banner class
+    const bannerClass = isLulus ? 'valid' : 'tidak';
+
+    // Icon sesuai status
+    const iconLulus = `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#fff" stroke-width="1.5"/><path d="M6 12.5l4 4 8-8" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const iconTidak = `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#fff" stroke-width="1.5"/><path d="M12 8v5M12 16h.01" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+
+    // Kelulusan box
+    const kelulusanBox = isLulus
+      ? `<div class="kelulusan-box lulus">
+           <svg viewBox="0 0 24 24" fill="none"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M22 4 12 14.01l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+           <div><p class="kb-text">Siswa ini dinyatakan</p><p class="kb-status">✓ LULUS</p></div>
+         </div>`
+      : `<div class="kelulusan-box tidak">
+           <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+           <div><p class="kb-text">Siswa ini dinyatakan</p><p class="kb-status">✗ TIDAK LULUS</p></div>
+         </div>`;
+
+    el.innerHTML = `
+      <div class="card">
+
+        <!-- STATUS BANNER -->
+        <div class="status-banner ${bannerClass}">
+          <div class="status-icon">${isLulus ? iconLulus : iconTidak}</div>
+          <p class="status-label">Verifikasi Dokumen Resmi</p>
+          <p class="status-title">Dokumen Ini Telah Ditanda Tangani<br/>pada <span id="tglVerif"></span></p>
+          <p class="status-sub">
+            oleh Kepala ${sekolah}
+          </p>
+          <div class="ttd-badge">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2"/></svg>
+            Dokumen Sah &amp; Terverifikasi
+          </div>
+        </div>
+
+        <!-- DETAIL DOKUMEN -->
+        <div class="detail-section">
+          <p class="detail-title">Identitas Siswa</p>
+          <table class="detail-table">
+            <tr>
+              <td class="dt-label">Nama Lengkap</td>
+              <td class="dt-sep">:</td>
+              <td class="dt-val">${namaTitle(nama)}</td>
+            </tr>
+            <tr>
+              <td class="dt-label">NISN</td>
+              <td class="dt-sep">:</td>
+              <td class="dt-val">${nisn}</td>
+            </tr>
+            <tr>
+              <td class="dt-label">Kelas</td>
+              <td class="dt-sep">:</td>
+              <td class="dt-val">${kelas || '—'}</td>
+            </tr>
+            <tr>
+              <td class="dt-label">Satuan Pendidikan</td>
+              <td class="dt-sep">:</td>
+              <td class="dt-val">${sekolah}</td>
+            </tr>
+            <tr>
+              <td class="dt-label">Status Kelulusan</td>
+              <td class="dt-sep">:</td>
+              <td class="dt-val ${isLulus ? 'lulus' : 'tidak'}">${status}</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- BOX STATUS -->
+        ${kelulusanBox}
+
+        <!-- PENANDATANGAN -->
+        <div class="penanda-section">
+          <p class="penanda-label">Penanda Tangan</p>
+          <div class="penanda-inner">
+            <div class="penanda-avatar">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="7" r="4" stroke="#fff" stroke-width="2"/></svg>
+            </div>
+            <div>
+              <p class="penanda-nama">Agung Nugroho, S.Pd, M.M.</p>
+              <p class="penanda-jabatan">Kepala ${sekolah}</p>
+              <p class="penanda-nip">NIP. 197008191995121001</p>
+            </div>
+          </div>
+          <div class="penanda-tgl">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Ditandatangani pada: <strong>${tglTTD || '—'}</strong>
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="card-footer">
+          <p>
+            Dokumen ini diterbitkan secara resmi oleh <strong>${sekolah}</strong>.<br/>
+            Untuk konfirmasi lebih lanjut, hubungi Tata Usaha<br/>
+            <a href="tel:024-7604005">Telp. (024) 7604005</a>
+            &nbsp;|&nbsp;
+            <a href="mailto:mail.smp30@gmail.com">mail.smp30@gmail.com</a>
+          </p>
+        </div>
+
+      </div>`;
+  }
+
+  function namaTitle(str) {
+    if (!str) return '—';
+    return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  // Isi tanggal setelah render
+  const elTgl = document.getElementById('tglVerif');
+  if (elTgl) elTgl.textContent = tglTTD || '—';
+</script>
+</body>
+</html>
