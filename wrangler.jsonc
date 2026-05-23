@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pengumuman-smp30",
+  "compatibility_date": "2026-05-23",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": ".",
+    "exclude": [
+      ".git/**",
+      "Code.gs",
+      "TUTORIAL.md",
+      "README.md",
+      "wrangler.jsonc",
+      ".wrangler/**",
+      ".gitignore"
+    ]
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
